@@ -16,7 +16,7 @@ class SnakeRect(pygame.Rect):
         self.head = head
 
 
-snake_vel = 0
+snake_vel = new_snake_vel = 0
 snake_last = [(0, 0)]
 snake_head = SnakeRect(0, 0, 20, 20, True)
 snake_rects = [snake_head, *[SnakeRect(-20*(i+1), 0, 20, 20) for i in range(1)]]
@@ -120,6 +120,12 @@ def check_snake_collision():
             exit()
 
 
+def check_inverted_movement(new_vel):
+    if (snake_vel == 2 and new_vel == 0) or (snake_vel == 0 and new_vel == 2) or (snake_vel == 1 and new_vel == 3) or (snake_vel == 3 and new_vel == 1):
+        print("Game Over")
+        exit()
+
+
 def start_screen():
     # TODO: Finish start screen
 
@@ -144,13 +150,17 @@ if __name__ == "__main__":
             # check key inputs
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
-                snake_vel = 2
+                new_snake_vel = 2
             elif keys[pygame.K_RIGHT]:
-                snake_vel = 0
+                new_snake_vel = 0
             elif keys[pygame.K_UP]:
-                snake_vel = 1
+                new_snake_vel = 1
             elif keys[pygame.K_DOWN]:
-                snake_vel = 3
+                new_snake_vel = 3
+
+            # check inv movement
+            check_inverted_movement(new_snake_vel)
+            snake_vel = new_snake_vel
 
             screen.fill((0, 0, 0))
             draw_screen_grid()
